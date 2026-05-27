@@ -1,0 +1,37 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ErrorCode = void 0;
+var ErrorCode;
+(function (ErrorCode) {
+    ErrorCode[ErrorCode["SUCCESS"] = 0] = "SUCCESS";
+    ErrorCode[ErrorCode["BAD_REQUEST"] = 40000] = "BAD_REQUEST";
+    ErrorCode[ErrorCode["UNAUTHORIZED"] = 40100] = "UNAUTHORIZED";
+    ErrorCode[ErrorCode["FORBIDDEN"] = 40300] = "FORBIDDEN";
+    ErrorCode[ErrorCode["NOT_FOUND"] = 40400] = "NOT_FOUND";
+    ErrorCode[ErrorCode["CONFLICT"] = 40900] = "CONFLICT";
+    ErrorCode[ErrorCode["TOO_MANY_REQUESTS"] = 42900] = "TOO_MANY_REQUESTS";
+    ErrorCode[ErrorCode["INTERNAL_ERROR"] = 50000] = "INTERNAL_ERROR";
+    ErrorCode[ErrorCode["AUTH_VALIDATION_ERROR"] = 401001] = "AUTH_VALIDATION_ERROR";
+    ErrorCode[ErrorCode["AUTH_NOT_FOUND"] = 401002] = "AUTH_NOT_FOUND";
+    ErrorCode[ErrorCode["AUTH_INVALID_CREDENTIALS"] = 401003] = "AUTH_INVALID_CREDENTIALS";
+    ErrorCode[ErrorCode["AUTH_TOKEN_EXPIRED"] = 401004] = "AUTH_TOKEN_EXPIRED";
+    ErrorCode[ErrorCode["MATERIAL_VALIDATION_ERROR"] = 402001] = "MATERIAL_VALIDATION_ERROR";
+    ErrorCode[ErrorCode["MATERIAL_NOT_FOUND"] = 402002] = "MATERIAL_NOT_FOUND";
+    ErrorCode[ErrorCode["MATERIAL_ALREADY_EXISTS"] = 402003] = "MATERIAL_ALREADY_EXISTS";
+    ErrorCode[ErrorCode["MATERIAL_FOREIGN_KEY_VIOLATION"] = 402004] = "MATERIAL_FOREIGN_KEY_VIOLATION";
+    ErrorCode[ErrorCode["HEALTH_VALIDATION_ERROR"] = 403001] = "HEALTH_VALIDATION_ERROR";
+    ErrorCode[ErrorCode["HEALTH_NOT_FOUND"] = 403002] = "HEALTH_NOT_FOUND";
+    ErrorCode[ErrorCode["HEALTH_ALREADY_EXISTS"] = 403003] = "HEALTH_ALREADY_EXISTS";
+    ErrorCode[ErrorCode["LAW_VALIDATION_ERROR"] = 404001] = "LAW_VALIDATION_ERROR";
+    ErrorCode[ErrorCode["LAW_NOT_FOUND"] = 404002] = "LAW_NOT_FOUND";
+    ErrorCode[ErrorCode["LAW_ALREADY_EXISTS"] = 404003] = "LAW_ALREADY_EXISTS";
+    ErrorCode[ErrorCode["FORMULA_VALIDATION_ERROR"] = 405001] = "FORMULA_VALIDATION_ERROR";
+    ErrorCode[ErrorCode["FORMULA_NOT_FOUND"] = 405002] = "FORMULA_NOT_FOUND";
+    ErrorCode[ErrorCode["FORMULA_GENERATION_ERROR"] = 405003] = "FORMULA_GENERATION_ERROR";
+    ErrorCode[ErrorCode["BOOK_VALIDATION_ERROR"] = 406001] = "BOOK_VALIDATION_ERROR";
+    ErrorCode[ErrorCode["BOOK_NOT_FOUND"] = 406002] = "BOOK_NOT_FOUND";
+    ErrorCode[ErrorCode["EXPORT_ERROR"] = 407001] = "EXPORT_ERROR";
+    ErrorCode[ErrorCode["IMPORT_ERROR"] = 408001] = "IMPORT_ERROR";
+    ErrorCode[ErrorCode["IMPORT_VALIDATION_ERROR"] = 408002] = "IMPORT_VALIDATION_ERROR";
+})(ErrorCode || (exports.ErrorCode = ErrorCode = {}));
+//# sourceMappingURL=error-codes.js.map

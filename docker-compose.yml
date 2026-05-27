@@ -1,0 +1,74 @@
+services:
+  mysql:
+    image: mysql:8.0.44
+    container_name: jiajia-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${DB_NAME:-jiajia_db}
+      MYSQL_USER: ${DB_USER:-jiajia_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-jiajia_pass}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: jiajia-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.8
+    container_name: jiajia-meilisearch
+    restart: unless-stopped
+    environment:
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY:-jiajia_meili_key}
+    ports:
+      - "7700:7700"
+    volumes:
+      - meilisearch_data:/meili_data
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: jiajia-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: mysql://${DB_USER:-jiajia_user}:${DB_PASSWORD:-jiajia_pass}@mysql:3306/${DB_NAME:-jiajia_db}
+      REDIS_URL: redis://redis:6379
+      MEILISEARCH_HOST: http://meilisearch:7700
+      MEILISEARCH_API_KEY: ${MEILI_MASTER_KEY:-jiajia_meili_key}
+      JWT_SECRET: ${JWT_SECRET:-jiajia_jwt_secret_key}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-jiajia_encryption_key_32bytes}
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      meilisearch:
+        condition: service_started
+
+volumes:
+  mysql_data:
+  redis_data:
+  meilisearch_data:

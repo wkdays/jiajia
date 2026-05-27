@@ -1,0 +1,255 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  role      String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MaterialBase {
+  id         Int      @id @default(autoincrement())
+  name       String
+  alias      String?
+  type       String
+  intro      String?
+  source     String?
+  createTime DateTime @default(now())
+  updateTime DateTime @updatedAt
+
+  suppliers    MaterialSupplier[]
+  effects      MaterialEffect[]
+  clinics      MaterialClinic[]
+  patents      MaterialPatent[]
+  safety       MaterialSafety[]
+  healthLinks  HealthMaterial[]
+  lawLinks     LawMaterial[]
+  formulaLinks FormulaMaterial[]
+}
+
+model MaterialSupplier {
+  id            Int       @id @default(autoincrement())
+  materialId    Int
+  name          String
+  country       String?
+  qualification String?
+  spec          String?
+  price         Float?
+  priceDate     DateTime?
+
+  material MaterialBase @relation(fields: [materialId], references: [id], onDelete: Cascade)
+}
+
+model MaterialEffect {
+  id                 Int     @id @default(autoincrement())
+  materialId         Int
+  functionalComponent String?
+  componentContent   Float?
+  coreEffect         String?
+  targetPoint        String?
+
+  material MaterialBase @relation(fields: [materialId], references: [id], onDelete: Cascade)
+}
+
+model MaterialClinic {
+  id               Int     @id @default(autoincrement())
+  materialId       Int
+  effectiveDosage  String?
+  clinicType       String?
+  clinicPopulation String?
+  clinicConclusion String?
+  literatureSource String?
+
+  material MaterialBase @relation(fields: [materialId], references: [id], onDelete: Cascade)
+}
+
+model MaterialPatent {
+  id             Int     @id @default(autoincrement())
+  materialId     Int
+  patentNo       String?
+  patentType     String?
+  patentCountry  String?
+  marketStatus   String?
+  competitorInfo String?
+
+  material MaterialBase @relation(fields: [materialId], references: [id], onDelete: Cascade)
+}
+
+model MaterialSafety {
+  id               Int     @id @default(autoincrement())
+  materialId       Int
+  safetyInfo       String?
+  bioavailability  String?
+  complianceStatus String?
+
+  material MaterialBase @relation(fields: [materialId], references: [id], onDelete: Cascade)
+}
+
+model HealthBase {
+  id         Int      @id @default(autoincrement())
+  name       String
+  type       String
+  symptom    String?
+  createTime DateTime @default(now())
+  updateTime DateTime @updatedAt
+
+  mechanisms    HealthMechanism[]
+  causes        HealthCause[]
+  materialLinks HealthMaterial[]
+  formulas      FormulaBase[]
+}
+
+model HealthMechanism {
+  id           Int     @id @default(autoincrement())
+  healthId     Int
+  pathogenesis String?
+  coreTarget   String?
+  pathway      String?
+
+  health HealthBase @relation(fields: [healthId], references: [id], onDelete: Cascade)
+}
+
+model HealthCause {
+  id            Int     @id @default(autoincrement())
+  healthId      Int
+  internalCause String?
+  externalCause String?
+  highRiskGroup String?
+
+  health HealthBase @relation(fields: [healthId], references: [id], onDelete: Cascade)
+}
+
+model HealthMaterial {
+  id         Int     @id @default(autoincrement())
+  healthId   Int
+  materialId Int
+  matchLogic String?
+
+  health   HealthBase   @relation(fields: [healthId], references: [id], onDelete: Cascade)
+  material MaterialBase @relation(fields: [materialId], references: [id], onDelete: Cascade)
+
+  @@unique([healthId, materialId])
+}
+
+model LawBase {
+  id            Int       @id @default(autoincrement())
+  name          String
+  country       String
+  effectiveDate DateTime?
+  scope         String?
+
+  materialLinks LawMaterial[]
+  updates       LawUpdate[]
+}
+
+model LawMaterial {
+  id               Int     @id @default(autoincrement())
+  lawId            Int
+  materialId       Int
+  complianceStatus String?
+  limitDosage      String?
+  labelRequire     String?
+
+  law      LawBase      @relation(fields: [lawId], references: [id], onDelete: Cascade)
+  material MaterialBase @relation(fields: [materialId], references: [id], onDelete: Cascade)
+}
+
+model LawUpdate {
+  id            Int       @id @default(autoincrement())
+  lawId         Int
+  updateDate    DateTime?
+  updateContent String?
+
+  law LawBase @relation(fields: [lawId], references: [id], onDelete: Cascade)
+}
+
+model FormulaBase {
+  id            Int      @id @default(autoincrement())
+  name          String
+  healthId      Int
+  targetPeople  String?
+  targetCountry String?
+  createUser    String?
+  createTime    DateTime @default(now())
+
+  health    HealthBase        @relation(fields: [healthId], references: [id], onDelete: Cascade)
+  materials FormulaMaterial[]
+  logics    FormulaLogic[]
+}
+
+model FormulaMaterial {
+  id          Int     @id @default(autoincrement())
+  formulaId   Int
+  materialId  Int
+  dosage      Float?
+  dosageLogic String?
+
+  formula  FormulaBase  @relation(fields: [formulaId], references: [id], onDelete: Cascade)
+  material MaterialBase @relation(fields: [materialId], references: [id], onDelete: Cascade)
+}
+
+model FormulaLogic {
+  id                   Int     @id @default(autoincrement())
+  formulaId            Int
+  logicLine            String?
+  effectSummary        String?
+  complianceConclusion String?
+  tips                 String?
+
+  formula FormulaBase @relation(fields: [formulaId], references: [id], onDelete: Cascade)
+}
+
+model BookBase {
+  id          Int       @id @default(autoincrement())
+  name        String
+  author      String?
+  publisher   String?
+  publishDate DateTime?
+  bookType    String?
+
+  records BookRecord[]
+}
+
+model BookRecord {
+  id          Int       @id @default(autoincrement())
+  bookId      Int
+  studyDate   DateTime?
+  chapter     String?
+  coreContent String?
+  notes       String?
+
+  book      BookBase  @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  relations BookRel[]
+}
+
+model BookRel {
+  id       Int    @id @default(autoincrement())
+  recordId Int
+  relType  String
+  relIdVal Int
+
+  record BookRecord @relation(fields: [recordId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  action    String
+  entity    String
+  entityId  Int?
+  changes   String?
+  ip        String
+  userAgent String
+  createdAt DateTime @default(now())
+}
