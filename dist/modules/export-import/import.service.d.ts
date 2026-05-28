@@ -6,6 +6,8 @@ export declare class ImportService {
         total: number;
         imported: number;
         failed: number;
+        headers: string[];
+        mapping: Record<string, string>;
         errors: string[];
     }>;
     private parseCsv;

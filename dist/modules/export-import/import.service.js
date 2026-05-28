@@ -51,6 +51,8 @@ let ImportService = class ImportService {
             total: data.length,
             imported,
             failed,
+            headers,
+            mapping: reverseMapping,
             errors: errors.slice(0, 10),
         };
     }
@@ -77,12 +79,10 @@ let ImportService = class ImportService {
                 currentCell = '';
             }
             else if ((char === '\n' || char === '\r') && !inQuotes) {
-                if (currentCell !== '' || currentRow.length > 0) {
-                    currentRow.push(currentCell.trim());
-                    rows.push(currentRow);
-                    currentRow = [];
-                    currentCell = '';
-                }
+                currentRow.push(currentCell.trim());
+                rows.push(currentRow);
+                currentRow = [];
+                currentCell = '';
                 if (char === '\r' && nextChar === '\n') {
                     i++;
                 }
@@ -91,7 +91,7 @@ let ImportService = class ImportService {
                 currentCell += char;
             }
         }
-        if (currentCell !== '' || currentRow.length > 0) {
+        if (currentRow.length > 0 || currentCell !== '') {
             currentRow.push(currentCell.trim());
             rows.push(currentRow);
         }
@@ -107,7 +107,7 @@ let ImportService = class ImportService {
         const record = {};
         headers.forEach((header, index) => {
             const value = row[index];
-            if (value !== undefined && value !== '') {
+            if (value !== undefined) {
                 let fieldName = reverseMapping[header];
                 if (!fieldName) {
                     const normalizedHeader = this.normalizeHeader(header);

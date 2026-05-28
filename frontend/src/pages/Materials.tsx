@@ -103,16 +103,29 @@ export default function Materials() {
     setModalVisible(true)
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
-    const reader = new FileReader()
-    reader.onload = (event) => {
-      const content = event.target?.result as string
+    try {
+      const buffer = await file.arrayBuffer()
+      let content = ''
+
+      try {
+        const utf8 = new TextDecoder('utf-8', { fatal: true }).decode(buffer)
+        if (!utf8.includes('�')) {
+          content = utf8
+        } else {
+          throw new Error('Contains replacement chars')
+        }
+      } catch {
+        content = new TextDecoder('gbk').decode(buffer)
+      }
+
       setCsvContent(content)
+    } catch {
+      message.error('文件读取失败，请确保文件编码为 UTF-8 或 GBK')
     }
-    reader.readAsText(file)
   }
 
   const handleImport = async () => {

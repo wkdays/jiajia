@@ -18,7 +18,6 @@ export class ImportService {
     const headers = rows[0];
     const data = rows.slice(1);
 
-    // Build reverse mapping: CSV header -> entity field name
     const reverseMapping: Record<string, string> = {};
     if (fieldMapping) {
       for (const [entityField, csvHeader] of Object.entries(fieldMapping)) {
@@ -32,7 +31,7 @@ export class ImportService {
 
     for (let i = 0; i < data.length; i++) {
       const row = data[i];
-      if (row.length === 1 && row[0] === '') continue; // Skip empty rows
+      if (row.length === 1 && row[0] === '') continue;
       try {
         const record = this.mapRowToRecord(headers, row, reverseMapping);
         await this.createRecord(entity, record);
@@ -47,12 +46,13 @@ export class ImportService {
       total: data.length,
       imported,
       failed,
-      errors: errors.slice(0, 10), // Return first 10 errors
+      headers,
+      mapping: reverseMapping,
+      errors: errors.slice(0, 10),
     };
   }
 
   private parseCsv(content: string): string[][] {
-    // Remove BOM if present
     content = content.replace(/^\uFEFF/, '');
 
     const rows: string[][] = [];
@@ -67,7 +67,7 @@ export class ImportService {
       if (char === '"') {
         if (inQuotes && nextChar === '"') {
           currentCell += '"';
-          i++; // Skip next quote
+          i++;
         } else {
           inQuotes = !inQuotes;
         }
@@ -75,22 +75,19 @@ export class ImportService {
         currentRow.push(currentCell.trim());
         currentCell = '';
       } else if ((char === '\n' || char === '\r') && !inQuotes) {
-        if (currentCell !== '' || currentRow.length > 0) {
-          currentRow.push(currentCell.trim());
-          rows.push(currentRow);
-          currentRow = [];
-          currentCell = '';
-        }
+        currentRow.push(currentCell.trim());
+        rows.push(currentRow);
+        currentRow = [];
+        currentCell = '';
         if (char === '\r' && nextChar === '\n') {
-          i++; // Skip \n after \r
+          i++;
         }
       } else {
         currentCell += char;
       }
     }
 
-    // Push last cell/row
-    if (currentCell !== '' || currentRow.length > 0) {
+    if (currentRow.length > 0 || currentCell !== '') {
       currentRow.push(currentCell.trim());
       rows.push(currentRow);
     }
@@ -113,7 +110,7 @@ export class ImportService {
     const record: Record<string, any> = {};
     headers.forEach((header, index) => {
       const value = row[index];
-      if (value !== undefined && value !== '') {
+      if (value !== undefined) {
         let fieldName = reverseMapping[header];
         if (!fieldName) {
           const normalizedHeader = this.normalizeHeader(header);

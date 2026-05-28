@@ -149,4 +149,5 @@ export declare class MaterialBaseService {
     removeBatch(ids: number[]): Promise<{
         deleted: number;
     }>;
+    private renumberIds;
 }

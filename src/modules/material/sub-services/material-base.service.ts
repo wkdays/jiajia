@@ -93,7 +93,9 @@ export class MaterialBaseService {
 
   async remove(id: number) {
     await this.findOne(id);
-    return this.prisma.materialBase.delete({ where: { id } });
+    const deleted = await this.prisma.materialBase.delete({ where: { id } });
+    await this.renumberIds();
+    return deleted;
   }
 
   async removeBatch(ids: number[]) {
@@ -103,6 +105,36 @@ export class MaterialBaseService {
     const result = await this.prisma.materialBase.deleteMany({
       where: { id: { in: ids } },
     });
+    await this.renumberIds();
     return { deleted: result.count };
+  }
+
+  private async renumberIds() {
+    const records = await this.prisma.materialBase.findMany({
+      orderBy: { id: 'asc' },
+      select: { id: true },
+    });
+
+    for (let i = 0; i < records.length; i++) {
+      const oldId = records[i].id;
+      const newId = i + 1;
+      if (oldId === newId) continue;
+
+      await this.prisma.$executeRaw`UPDATE MaterialSupplier SET materialId = ${newId} WHERE materialId = ${oldId}`;
+      await this.prisma.$executeRaw`UPDATE MaterialEffect SET materialId = ${newId} WHERE materialId = ${oldId}`;
+      await this.prisma.$executeRaw`UPDATE MaterialClinic SET materialId = ${newId} WHERE materialId = ${oldId}`;
+      await this.prisma.$executeRaw`UPDATE MaterialPatent SET materialId = ${newId} WHERE materialId = ${oldId}`;
+      await this.prisma.$executeRaw`UPDATE MaterialSafety SET materialId = ${newId} WHERE materialId = ${oldId}`;
+      await this.prisma.$executeRaw`UPDATE HealthMaterial SET materialId = ${newId} WHERE materialId = ${oldId}`;
+      await this.prisma.$executeRaw`UPDATE LawMaterial SET materialId = ${newId} WHERE materialId = ${oldId}`;
+      await this.prisma.$executeRaw`UPDATE FormulaMaterial SET materialId = ${newId} WHERE materialId = ${oldId}`;
+      await this.prisma.$executeRaw`UPDATE MaterialBase SET id = ${newId} WHERE id = ${oldId}`;
+    }
+
+    if (records.length > 0) {
+      await this.prisma.$executeRaw`UPDATE sqlite_sequence SET seq = ${records.length} WHERE name = 'MaterialBase'`;
+    } else {
+      await this.prisma.$executeRaw`DELETE FROM sqlite_sequence WHERE name = 'MaterialBase'`;
+    }
   }
 }

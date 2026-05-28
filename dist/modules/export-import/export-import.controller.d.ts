@@ -13,6 +13,8 @@ export declare class ExportImportController {
         total: number;
         imported: number;
         failed: number;
+        headers: string[];
+        mapping: Record<string, string>;
         errors: string[];
     }>;
 }
