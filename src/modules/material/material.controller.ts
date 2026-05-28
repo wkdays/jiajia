@@ -54,16 +54,16 @@ export class MaterialController {
     return this.baseService.update(id, dto);
   }
 
-  @Delete(':id')
-  @ApiOperation({ summary: 'Delete material' })
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.baseService.remove(id);
-  }
-
   @Delete('batch')
   @ApiOperation({ summary: 'Batch delete materials' })
   removeBatch(@Body('ids') ids: number[]) {
     return this.baseService.removeBatch(ids);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete material' })
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.baseService.remove(id);
   }
 
   // Sub-entity routes

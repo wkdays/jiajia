@@ -9,6 +9,7 @@ export declare class ImportService {
         errors: string[];
     }>;
     private parseCsv;
+    private normalizeHeader;
     private mapRowToRecord;
     private createRecord;
 }

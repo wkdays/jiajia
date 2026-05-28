@@ -97,12 +97,30 @@ let ImportService = class ImportService {
         }
         return rows;
     }
+    normalizeHeader(header) {
+        return header
+            .trim()
+            .replace(/\s+/g, '')
+            .replace(/[()]/g, '（');
+    }
     mapRowToRecord(headers, row, reverseMapping) {
         const record = {};
         headers.forEach((header, index) => {
             const value = row[index];
             if (value !== undefined && value !== '') {
-                const fieldName = reverseMapping[header] || header;
+                let fieldName = reverseMapping[header];
+                if (!fieldName) {
+                    const normalizedHeader = this.normalizeHeader(header);
+                    for (const [csvHeader, entityField] of Object.entries(reverseMapping)) {
+                        if (this.normalizeHeader(csvHeader) === normalizedHeader) {
+                            fieldName = entityField;
+                            break;
+                        }
+                    }
+                }
+                if (!fieldName) {
+                    fieldName = header;
+                }
                 record[fieldName] = value;
             }
         });

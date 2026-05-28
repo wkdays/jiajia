@@ -146,6 +146,9 @@ export declare class MaterialController {
         createTime: Date;
         updateTime: Date;
     }>;
+    removeBatch(ids: number[]): Promise<{
+        deleted: number;
+    }>;
     remove(id: number): Promise<{
         name: string;
         id: number;
@@ -155,9 +158,6 @@ export declare class MaterialController {
         source: string | null;
         createTime: Date;
         updateTime: Date;
-    }>;
-    removeBatch(ids: number[]): Promise<{
-        deleted: number;
     }>;
     createSupplier(materialId: number, dto: CreateMaterialSupplierDto): Promise<{
         name: string;

@@ -98,6 +98,13 @@ export class ImportService {
     return rows;
   }
 
+  private normalizeHeader(header: string): string {
+    return header
+      .trim()
+      .replace(/\s+/g, '')
+      .replace(/[()]/g, '（');
+  }
+
   private mapRowToRecord(
     headers: string[],
     row: string[],
@@ -107,8 +114,19 @@ export class ImportService {
     headers.forEach((header, index) => {
       const value = row[index];
       if (value !== undefined && value !== '') {
-        // Use reverse mapping if available, otherwise use header as-is
-        const fieldName = reverseMapping[header] || header;
+        let fieldName = reverseMapping[header];
+        if (!fieldName) {
+          const normalizedHeader = this.normalizeHeader(header);
+          for (const [csvHeader, entityField] of Object.entries(reverseMapping)) {
+            if (this.normalizeHeader(csvHeader) === normalizedHeader) {
+              fieldName = entityField;
+              break;
+            }
+          }
+        }
+        if (!fieldName) {
+          fieldName = header;
+        }
         record[fieldName] = value;
       }
     });
