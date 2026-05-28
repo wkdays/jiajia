@@ -57,7 +57,8 @@ export class ExportImportController {
   async importEntity(
     @Param('entity') entity: string,
     @Body('csvContent') csvContent: string,
+    @Body('fieldMapping') fieldMapping?: Record<string, string>,
   ) {
-    return this.importService.importFromCsv(entity, csvContent);
+    return this.importService.importFromCsv(entity, csvContent, fieldMapping);
   }
 }

@@ -43,8 +43,8 @@ let ExportImportController = class ExportImportController {
         res.setHeader('Content-Disposition', `attachment; filename="${result.filename}"`);
         res.send(result.content);
     }
-    async importEntity(entity, csvContent) {
-        return this.importService.importFromCsv(entity, csvContent);
+    async importEntity(entity, csvContent, fieldMapping) {
+        return this.importService.importFromCsv(entity, csvContent, fieldMapping);
     }
 };
 exports.ExportImportController = ExportImportController;
@@ -83,8 +83,9 @@ __decorate([
     (0, swagger_1.ApiConsumes)('text/csv'),
     __param(0, (0, common_1.Param)('entity')),
     __param(1, (0, common_1.Body)('csvContent')),
+    __param(2, (0, common_1.Body)('fieldMapping')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:paramtypes", [String, String, Object]),
     __metadata("design:returntype", Promise)
 ], ExportImportController.prototype, "importEntity", null);
 exports.ExportImportController = ExportImportController = __decorate([

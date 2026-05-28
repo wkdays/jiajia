@@ -5,7 +5,11 @@ import { PrismaService } from '../../prisma/prisma.service';
 export class ImportService {
   constructor(private prisma: PrismaService) {}
 
-  async importFromCsv(entity: string, csvContent: string) {
+  async importFromCsv(
+    entity: string,
+    csvContent: string,
+    fieldMapping?: Record<string, string>,
+  ) {
     const rows = this.parseCsv(csvContent);
     if (rows.length === 0) {
       throw new BadRequestException('CSV file is empty');
@@ -14,14 +18,23 @@ export class ImportService {
     const headers = rows[0];
     const data = rows.slice(1);
 
+    // Build reverse mapping: CSV header -> entity field name
+    const reverseMapping: Record<string, string> = {};
+    if (fieldMapping) {
+      for (const [entityField, csvHeader] of Object.entries(fieldMapping)) {
+        reverseMapping[csvHeader.trim()] = entityField;
+      }
+    }
+
     let imported = 0;
     let failed = 0;
     const errors: string[] = [];
 
     for (let i = 0; i < data.length; i++) {
       const row = data[i];
+      if (row.length === 1 && row[0] === '') continue; // Skip empty rows
       try {
-        const record = this.mapRowToRecord(headers, row);
+        const record = this.mapRowToRecord(headers, row, reverseMapping);
         await this.createRecord(entity, record);
         imported++;
       } catch (error) {
@@ -85,12 +98,18 @@ export class ImportService {
     return rows;
   }
 
-  private mapRowToRecord(headers: string[], row: string[]): Record<string, any> {
+  private mapRowToRecord(
+    headers: string[],
+    row: string[],
+    reverseMapping: Record<string, string>,
+  ): Record<string, any> {
     const record: Record<string, any> = {};
     headers.forEach((header, index) => {
       const value = row[index];
       if (value !== undefined && value !== '') {
-        record[header] = value;
+        // Use reverse mapping if available, otherwise use header as-is
+        const fieldName = reverseMapping[header] || header;
+        record[fieldName] = value;
       }
     });
     return record;

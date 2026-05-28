@@ -17,20 +17,28 @@ let ImportService = class ImportService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    async importFromCsv(entity, csvContent) {
+    async importFromCsv(entity, csvContent, fieldMapping) {
         const rows = this.parseCsv(csvContent);
         if (rows.length === 0) {
             throw new common_1.BadRequestException('CSV file is empty');
         }
         const headers = rows[0];
         const data = rows.slice(1);
+        const reverseMapping = {};
+        if (fieldMapping) {
+            for (const [entityField, csvHeader] of Object.entries(fieldMapping)) {
+                reverseMapping[csvHeader.trim()] = entityField;
+            }
+        }
         let imported = 0;
         let failed = 0;
         const errors = [];
         for (let i = 0; i < data.length; i++) {
             const row = data[i];
+            if (row.length === 1 && row[0] === '')
+                continue;
             try {
-                const record = this.mapRowToRecord(headers, row);
+                const record = this.mapRowToRecord(headers, row, reverseMapping);
                 await this.createRecord(entity, record);
                 imported++;
             }
@@ -89,12 +97,13 @@ let ImportService = class ImportService {
         }
         return rows;
     }
-    mapRowToRecord(headers, row) {
+    mapRowToRecord(headers, row, reverseMapping) {
         const record = {};
         headers.forEach((header, index) => {
             const value = row[index];
             if (value !== undefined && value !== '') {
-                record[header] = value;
+                const fieldName = reverseMapping[header] || header;
+                record[fieldName] = value;
             }
         });
         return record;

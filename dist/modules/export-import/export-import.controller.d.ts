@@ -9,7 +9,7 @@ export declare class ExportImportController {
     exportEntity(entity: string, dto: ExportDto, res: Response): Promise<void>;
     exportFormulaReport(id: number, res: Response): Promise<void>;
     exportSuppliers(materialId: number, mask: string, res: Response): Promise<void>;
-    importEntity(entity: string, csvContent: string): Promise<{
+    importEntity(entity: string, csvContent: string, fieldMapping?: Record<string, string>): Promise<{
         total: number;
         imported: number;
         failed: number;

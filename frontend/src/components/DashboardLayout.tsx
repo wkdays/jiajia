@@ -17,7 +17,7 @@ const { Header, Sider, Content } = Layout
 
 const menuItems = [
   { key: '/', icon: <DashboardOutlined />, label: '仪表盘' },
-  { key: '/materials', icon: <ExperimentOutlined />, label: '原料管理' },
+  { key: '/materials', icon: <ExperimentOutlined />, label: '成分管理' },
   { key: '/health', icon: <MedicineBoxOutlined />, label: '健康问题' },
   { key: '/formulas', icon: <BulbOutlined />, label: '配方管理' },
   { key: '/laws', icon: <FileTextOutlined />, label: '法规管理' },
