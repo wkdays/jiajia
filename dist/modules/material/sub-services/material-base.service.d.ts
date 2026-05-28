@@ -146,4 +146,7 @@ export declare class MaterialBaseService {
         createTime: Date;
         updateTime: Date;
     }>;
+    removeBatch(ids: number[]): Promise<{
+        deleted: number;
+    }>;
 }

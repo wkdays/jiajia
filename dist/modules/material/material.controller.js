@@ -52,6 +52,9 @@ let MaterialController = class MaterialController {
     remove(id) {
         return this.baseService.remove(id);
     }
+    removeBatch(ids) {
+        return this.baseService.removeBatch(ids);
+    }
     createSupplier(materialId, dto) {
         return this.supplierService.create({ ...dto, materialId });
     }
@@ -125,6 +128,14 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], MaterialController.prototype, "remove", null);
+__decorate([
+    (0, common_1.Delete)('batch'),
+    (0, swagger_1.ApiOperation)({ summary: 'Batch delete materials' }),
+    __param(0, (0, common_1.Body)('ids')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array]),
+    __metadata("design:returntype", void 0)
+], MaterialController.prototype, "removeBatch", null);
 __decorate([
     (0, common_1.Post)(':id/suppliers'),
     (0, swagger_1.ApiOperation)({ summary: 'Add supplier to material' }),

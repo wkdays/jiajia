@@ -156,6 +156,9 @@ export declare class MaterialController {
         createTime: Date;
         updateTime: Date;
     }>;
+    removeBatch(ids: number[]): Promise<{
+        deleted: number;
+    }>;
     createSupplier(materialId: number, dto: CreateMaterialSupplierDto): Promise<{
         name: string;
         id: number;

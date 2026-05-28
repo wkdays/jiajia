@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
-import { Table, Button, Modal, Form, Input, message, Popconfirm, Space, Card, Upload } from 'antd'
+import { Table, Button, Modal, Form, Input, message, Popconfirm, Space, Card } from 'antd'
 import { PlusOutlined, EditOutlined, DeleteOutlined, EyeOutlined, UploadOutlined } from '@ant-design/icons'
-import type { UploadFile } from 'antd/es/upload/interface'
 import api from '../services/api'
 
 interface Material {
@@ -20,6 +19,7 @@ export default function Materials() {
   const [importLoading, setImportLoading] = useState(false)
   const [csvContent, setCsvContent] = useState('')
   const [editingId, setEditingId] = useState<number | null>(null)
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [form] = Form.useForm()
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10, total: 0 })
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -71,6 +71,30 @@ export default function Materials() {
     } catch (err) {
       message.error('删除失败')
     }
+  }
+
+  const handleBatchDelete = async () => {
+    if (selectedRowKeys.length === 0) {
+      message.warning('请先选择要删除的成分')
+      return
+    }
+    Modal.confirm({
+      title: '确认批量删除',
+      content: `确定要删除选中的 ${selectedRowKeys.length} 条成分吗？此操作不可恢复。`,
+      okText: '确认删除',
+      okType: 'danger',
+      cancelText: '取消',
+      async onOk() {
+        try {
+          await api.delete('/materials/batch', { data: { ids: selectedRowKeys } })
+          message.success('批量删除成功')
+          setSelectedRowKeys([])
+          fetchData(pagination.current, pagination.pageSize)
+        } catch (err) {
+          message.error('批量删除失败')
+        }
+      },
+    })
   }
 
   const openEdit = (record: Material) => {
@@ -155,6 +179,11 @@ export default function Materials() {
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
         <h2 style={{ margin: 0 }}>成分管理</h2>
         <Space>
+          {selectedRowKeys.length > 0 && (
+            <Button danger onClick={handleBatchDelete}>
+              批量删除 ({selectedRowKeys.length})
+            </Button>
+          )}
           <Button icon={<UploadOutlined />} onClick={() => { setCsvContent(''); setImportVisible(true) }}>
             批量导入
           </Button>
@@ -169,6 +198,10 @@ export default function Materials() {
           columns={columns}
           dataSource={data}
           loading={loading}
+          rowSelection={{
+            selectedRowKeys,
+            onChange: (keys) => setSelectedRowKeys(keys),
+          }}
           pagination={{
             ...pagination,
             showSizeChanger: true,

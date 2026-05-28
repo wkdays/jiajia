@@ -97,6 +97,15 @@ let MaterialBaseService = class MaterialBaseService {
         await this.findOne(id);
         return this.prisma.materialBase.delete({ where: { id } });
     }
+    async removeBatch(ids) {
+        if (!ids || ids.length === 0) {
+            return { deleted: 0 };
+        }
+        const result = await this.prisma.materialBase.deleteMany({
+            where: { id: { in: ids } },
+        });
+        return { deleted: result.count };
+    }
 };
 exports.MaterialBaseService = MaterialBaseService;
 exports.MaterialBaseService = MaterialBaseService = __decorate([

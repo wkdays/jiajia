@@ -60,6 +60,12 @@ export class MaterialController {
     return this.baseService.remove(id);
   }
 
+  @Delete('batch')
+  @ApiOperation({ summary: 'Batch delete materials' })
+  removeBatch(@Body('ids') ids: number[]) {
+    return this.baseService.removeBatch(ids);
+  }
+
   // Sub-entity routes
   @Post(':id/suppliers')
   @ApiOperation({ summary: 'Add supplier to material' })
