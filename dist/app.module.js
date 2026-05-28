@@ -11,6 +11,8 @@ const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const jwt_1 = require("@nestjs/jwt");
 const core_1 = require("@nestjs/core");
+const app_controller_1 = require("./app.controller");
+const app_service_1 = require("./app.service");
 const prisma_module_1 = require("./prisma/prisma.module");
 const auth_module_1 = require("./modules/auth/auth.module");
 const material_module_1 = require("./modules/material/material.module");
@@ -51,7 +53,9 @@ exports.AppModule = AppModule = __decorate([
             export_import_module_1.ExportImportModule,
             admin_module_1.AdminModule,
         ],
+        controllers: [app_controller_1.AppController],
         providers: [
+            app_service_1.AppService,
             {
                 provide: core_1.APP_GUARD,
                 useClass: jwt_auth_guard_1.JwtAuthGuard,

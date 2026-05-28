@@ -1,0 +1,14 @@
+Script started on Wed May 27 20:18:42 2026
+[1m[7m%[27m[1m[0m                                                                                     ]2;yongli@yonglibook-166:~/Documents/git/jiajia]1;..ts/git/jiajia]7;file://yonglibook-166.local/Users/yongli/Documents/git/jiajia\[0m[27m[24m[J
+[1;36mjiajia[0m on [1;35m main[0m [1;31m[!?][0m via [1;34m🐳 orbstack[0m via [1;32m [0mon [1;34m☁️  [0m 
+[1;32m❯[0m [K[?1h=[?2004hl[32ml[39m[32ml[39m[90ms[39m[32ml[32ma[39m[32ml[32ma[32ms[39m[1m[31ml[1m[31ma[1m[31ms[0m[39m[1m[31ml[1m[31ma[0m[39m[0m[39m [0m[32ml[0m[32ma[39m[32ml[39m[39m [32ml[39m[90ms[39m[32ml[32ms[39m[?1l>[?2004l
+]2;eza --icons --git --group-directories-first]1;ls[36m [1mconfig[0m    [36m [1mnode_modules[0m              docker-compose.yml  [33m [1;4mpackage.json[0m
+[36m [1mcoverage[0m  [36m [1mprisma[0m                   [33m [1;4mDockerfile[0m          [33m [1mprisma.config.ts[0m
+[36m [1mdist[0m      [36m [1mscripts[0m                   eslint.config.mjs   [33m󰂺 [1;4mREADME.md[0m
+[36m [1mdocker[0m    [36m󰣞 [1msrc[0m                       my_record.log        tsconfig.build.json
+[36m [1mdocs[0m      [36m [1mtest[0m                      nest-cli.json       [33m [1;4mtsconfig.json[0m
+[36m [1mfrontend[0m   docker-compose.prod.yml   package-lock.json   [32m 下面直接给你完整.docx[0m
+[1m[7m%[27m[1m[0m                                                                                     ]2;yongli@yonglibook-166:~/Documents/git/jiajia]1;..ts/git/jiajia]7;file://yonglibook-166.local/Users/yongli/Documents/git/jiajia\[0m[27m[24m[J
+[1;36mjiajia[0m on [1;35m main[0m [1;31m[!?][0m via [1;34m🐳 orbstack[0m via [1;32m [0mon [1;34m☁️  [0m 
+[1;32m❯[0m [K[?1h=[?2004he[1m[31me[0m[39m[1m[31me[0m[39m[90mcho $NB_CLI_ROOT[39m[16D[1m[31me[1m[31mx[0m[39m[39m [39m [39m [39m [39m [39m [39m [39m [39m [39m [39m [39m [39m [39m [39m [15D[0m[32me[0m[32mx[39m[90mport OPENAI_API_KEY=sk-proj-0qez5dPiWhztwinf9-A6SpfPut4ewvTi0neS3-h0mjz7utAAe5kEm[90mX[90mFGXjVXehd-MQhmEzHygHT3BlbkFJ3v5rbx6daMklJdNf1cKBuPRiwTj9BkF3a9ArtJE75ZmKQ3dB7svj7e_G[90mh[90mojKLHk1xuwgIUOHwA[39m[K[A[A[14D[32me[32mx[32mi[39m[K[1B[K[1B[K[A[A[5C[1m[31me[1m[31mx[1m[31mi[0m[39m[90mt[39m[1m[31mi[1m[31mt[0m[39m[0m[32me[0m[32mx[0m[32mi[0m[32mt[39m[?1l>[?2004l[1B]2;exit]1;exit
+Script done on Wed May 27 20:18:56 2026

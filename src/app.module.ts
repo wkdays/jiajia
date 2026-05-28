@@ -41,7 +41,9 @@ import { RolesGuard } from './common/guards/roles.guard';
     ExportImportModule,
     AdminModule,
   ],
+  controllers: [AppController],
   providers: [
+    AppService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
